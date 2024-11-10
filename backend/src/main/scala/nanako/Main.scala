@@ -9,7 +9,6 @@ import sttp.client3.*
 import sttp.shared.Identity
 import sttp.tapir.*
 import sttp.tapir.server.http4s.Http4sServerInterpreter
-
 import scala.concurrent.ExecutionContext
 
 object HelloWorldHttp4sServer extends IOApp:
