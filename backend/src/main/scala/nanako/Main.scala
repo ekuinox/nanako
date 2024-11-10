@@ -10,6 +10,8 @@ import sttp.shared.Identity
 import sttp.tapir.*
 import sttp.tapir.server.http4s.Http4sServerInterpreter
 import scala.concurrent.ExecutionContext
+import nanako.config.DbConfig
+import nanako.config.ApiConfig
 
 object HelloWorldHttp4sServer extends IOApp:
   // the endpoint: single fixed path input ("hello"), single query parameter
@@ -23,15 +25,5 @@ object HelloWorldHttp4sServer extends IOApp:
       helloWorld.serverLogic(name => IO(s"Hello, $name!".asRight[Unit]))
     )
 
-  implicit val ec: ExecutionContext =
-    scala.concurrent.ExecutionContext.Implicits.global
-
   override def run(args: List[String]): IO[ExitCode] =
-    // starting the server
-    BlazeServerBuilder[IO]
-      .withExecutionContext(ec)
-      .bindHttp(8080, "localhost")
-      .withHttpApp(Router("/" -> helloWorldRoutes).orNotFound)
-      .resource
-      .useForever
-      .as(ExitCode.Success)
+    DbConfig.impl.setup >> ApiConfig.impl.setup >> IO.never
